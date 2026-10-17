@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>EcoCash - Loan Application</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        :root{
+            --primary:#0057ff;
+            --primary-dark:#003ecb;
+            --primary-light:#eef4ff;
+
+            --accent:#ff2d55;
+            --accent-dark:#e11d48;
+
+            --text:#1f2937;
+            --gray:#6b7280;
+            --bg:#f4f7ff;
+            --white:#ffffff;
+
+            --danger:#ef4444;
+        }
+
+        body{
+            font-family:'Inter',sans-serif;
+            background:linear-gradient(to bottom,#f4f7ff,#edf3ff);
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            padding:20px;
+            color:var(--text);
+        }
+
+        header{
+            width:100%;
+            max-width:480px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:15px;
+        }
+
+        .back-btn{
+            background:none;
+            border:none;
+            font-size:28px;
+            cursor:pointer;
+            color:var(--primary-dark);
+        }
+
+        .logo{
+            font-size:30px;
+            font-weight:800;
+        }
+
+        .logo-eco{
+            color:var(--primary);
+        }
+
+        .logo-cash{
+            color:var(--accent);
+        }
+
+        .card{
+            width:100%;
+            max-width:480px;
+            background:var(--white);
+            border-radius:30px;
+            padding:28px 24px;
+            box-shadow:0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .top-badge{
+            display:inline-block;
+            background:var(--primary-light);
+            color:var(--primary-dark);
+            font-size:13px;
+            font-weight:700;
+            padding:8px 14px;
+            border-radius:999px;
+            margin-bottom:18px;
+        }
+
+        .form-title{
+            font-size:30px;
+            font-weight:800;
+            margin-bottom:8px;
+            color:var(--primary-dark);
+        }
+
+        .form-subtitle{
+            color:var(--gray);
+            font-size:14px;
+            line-height:1.6;
+            margin-bottom:26px;
+        }
+
+        .progress-wrapper{
+            margin-bottom:30px;
+        }
+
+        .progress-top{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:10px;
+        }
+
+        .step-text{
+            font-size:14px;
+            font-weight:600;
+            color:var(--gray);
+        }
+
+        .progress-percent{
+            font-size:14px;
+            font-weight:700;
+            color:var(--primary);
+        }
+
+        .progress-bar{
+            width:100%;
+            height:10px;
+            background:#dbe7ff;
+            border-radius:999px;
+            overflow:hidden;
+        }
+
+        .progress-fill{
+            width:66%;
+            height:100%;
+            background:linear-gradient(
+                135deg,
+                var(--primary),
+                var(--accent)
+            );
+            border-radius:999px;
+        }
+
+        .name-group{
+            display:flex;
+            gap:14px;
+        }
+
+        .field-group{
+            width:100%;
+            margin-bottom:22px;
+        }
+
+        .form-label{
+            display:block;
+            font-size:14px;
+            font-weight:700;
+            margin-bottom:8px;
+            color:var(--text);
+        }
+
+        .form-input{
+            width:100%;
+            padding:16px;
+            border:1px solid #dbe4ff;
+            border-radius:16px;
+            font-size:15px;
+            background:#fafcff;
+            transition:0.25s ease;
+        }
+
+        .form-input:focus{
+            outline:none;
+            border-color:var(--primary);
+            background:white;
+            box-shadow:0 0 0 4px rgba(0,87,255,0.08);
+        }
+
+        .phone-group{
+            display:flex;
+            align-items:center;
+            border:1px solid #dbe4ff;
+            border-radius:16px;
+            background:#fafcff;
+            padding:0 16px;
+            transition:0.25s ease;
+        }
+
+        .phone-group:focus-within{
+            border-color:var(--primary);
+            background:white;
+            box-shadow:0 0 0 4px rgba(0,87,255,0.08);
+        }
+
+        .phone-prefix{
+            color:var(--primary-dark);
+            font-weight:700;
+            margin-right:10px;
+            font-size:15px;
+        }
+
+        .phone-input{
+            flex:1;
+            border:none;
+            background:none;
+            outline:none;
+            padding:16px 0;
+            font-size:15px;
+        }
+
+        .helper-text{
+            font-size:12px;
+            color:var(--gray);
+            margin-top:8px;
+        }
+
+        /* ERROR */
+
+        .error-message{
+            color:var(--danger);
+            font-size:12px;
+            font-weight:600;
+            margin-top:8px;
+            display:none;
+        }
+
+        .invalid{
+            border-color:var(--danger) !important;
+            background:#fff5f5 !important;
+        }
+
+        .btn-group{
+            display:flex;
+            gap:14px;
+            margin-top:32px;
+        }
+
+        .prev-btn,
+        .next-btn{
+            flex:1;
+            border:none;
+            border-radius:999px;
+            padding:17px;
+            font-size:16px;
+            font-weight:700;
+            cursor:pointer;
+            transition:0.3s ease;
+        }
+
+        .prev-btn{
+            background:#edf2ff;
+            color:var(--primary-dark);
+        }
+
+        .next-btn{
+            background:linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+            color:white;
+            box-shadow:0 12px 25px rgba(0,87,255,0.18);
+        }
+
+        .next-btn:hover{
+            transform:translateY(-2px);
+        }
+
+        footer{
+            margin-top:20px;
+            font-size:12px;
+            color:#9ca3af;
+            text-align:center;
+        }
+
+        @media(max-width:520px){
+
+            body{
+                padding:14px;
+            }
+
+            .name-group{
+                flex-direction:column;
+                gap:0;
+            }
+
+            .form-title{
+                font-size:26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <button class="back-btn" onclick="history.back()">←</button>
+
+        <div class="logo">
+            <span class="logo-eco">Eco</span><span class="logo-cash">Cash</span>
+        </div>
+
+        <div style="width:28px;"></div>
+
+    </header>
+
+    <main class="card">
+
+        <div class="top-badge">
+            Loan Application
+        </div>
+
+        <h1 class="form-title">
+            Personal Details
+        </h1>
+
+        <p class="form-subtitle">
+            Enter your personal information to continue your EcoCash loan application.
+        </p>
+
+        <div class="progress-wrapper">
+
+            <div class="progress-top">
+                <span class="step-text">Step 2 of 3</span>
+                <span class="progress-percent">66%</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+
+        </div>
+
+        <div class="name-group">
+
+            <div class="field-group">
+
+                <label class="form-label">
+                    First Name
+                </label>
+
+                <input
+                    type="text"
+                    class="form-input"
+                    id="firstName"
+                    placeholder="John"
+                >
+
+                <div class="error-message" id="firstNameError">
+                    First name is required
+                </div>
+
+            </div>
+
+            <div class="field-group">
+
+                <label class="form-label">
+                    Last Name
+                </label>
+
+                <input
+                    type="text"
+                    class="form-input"
+                    id="lastName"
+                    placeholder="Doe"
+                >
+
+                <div class="error-message" id="lastNameError">
+                    Last name is required
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="field-group">
+
+            <label class="form-label">
+                Email Address
+            </label>
+
+            <input
+                type="email"
+                class="form-input"
+                id="email"
+                placeholder="john.doe@example.com"
+            >
+
+            <div class="error-message" id="emailError">
+                Enter a valid email address
+            </div>
+
+        </div>
+
+        <div class="field-group">
+
+            <label class="form-label">
+                Phone Number
+            </label>
+
+            <div class="phone-group" id="phoneGroup">
+
+                <span class="phone-prefix">
+                    +263
+                </span>
+
+                <input
+                    type="tel"
+                    class="phone-input"
+                    id="phone"
+                    placeholder="771234567"
+                >
+
+            </div>
+
+            <div class="helper-text">
+                Enter 9 digits (example: 771234567)
+            </div>
+
+            <div class="error-message" id="phoneError">
+                Phone number must contain exactly 9 digits
+            </div>
+
+        </div>
+
+        <div class="btn-group">
+
+            <button class="prev-btn" onclick="history.back()">
+                PREVIOUS
+            </button>
+
+            <button class="next-btn" id="nextBtn">
+                NEXT STEP
+            </button>
+
+        </div>
+
+    </main>
+
+    <footer>
+        © 2026 EcoCash Zimbabwe. All rights reserved.
+    </footer>
+
+    <script>
+
+        // PREFILL DATA
+
+        if(localStorage.getItem('firstName')){
+            document.getElementById('firstName').value =
+                localStorage.getItem('firstName');
+        }
+
+        if(localStorage.getItem('lastName')){
+            document.getElementById('lastName').value =
+                localStorage.getItem('lastName');
+        }
+
+        if(localStorage.getItem('email')){
+            document.getElementById('email').value =
+                localStorage.getItem('email');
+        }
+
+        if(localStorage.getItem('phone')){
+            document.getElementById('phone').value =
+                localStorage.getItem('phone');
+        }
+
+        // ELEMENTS
+
+        const firstName = document.getElementById('firstName');
+        const lastName = document.getElementById('lastName');
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
+        const phoneGroup = document.getElementById('phoneGroup');
+
+        // ERROR ELEMENTS
+
+        const firstNameError =
+            document.getElementById('firstNameError');
+
+        const lastNameError =
+            document.getElementById('lastNameError');
+
+        const emailError =
+            document.getElementById('emailError');
+
+        const phoneError =
+            document.getElementById('phoneError');
+
+        // RESET ERROR
+
+        function resetErrors(){
+
+            document
+                .querySelectorAll('.error-message')
+                .forEach(error => {
+                    error.style.display = 'none';
+                });
+
+            document
+                .querySelectorAll('.form-input')
+                .forEach(input => {
+                    input.classList.remove('invalid');
+                });
+
+            phoneGroup.classList.remove('invalid');
+        }
+
+        // VALIDATION
+
+        function validateForm(){
+
+            resetErrors();
+
+            let valid = true;
+
+            // FIRST NAME
+
+            if(firstName.value.trim() === ''){
+
+                firstName.classList.add('invalid');
+
+                firstNameError.style.display = 'block';
+
+                valid = false;
+            }
+
+            // LAST NAME
+
+            if(lastName.value.trim() === ''){
+
+                lastName.classList.add('invalid');
+
+                lastNameError.style.display = 'block';
+
+                valid = false;
+            }
+
+            // EMAIL
+
+            const emailValue = email.value.trim();
+
+            if(
+                emailValue === '' ||
+                !emailValue.includes('@') ||
+                !emailValue.includes('.')
+            ){
+
+                email.classList.add('invalid');
+
+                emailError.style.display = 'block';
+
+                valid = false;
+            }
+
+            // PHONE
+
+            const phoneValue = phone.value.trim();
+
+            if(
+                phoneValue === '' ||
+                phoneValue.length !== 9 ||
+                !/^\d+$/.test(phoneValue)
+            ){
+
+                phoneGroup.classList.add('invalid');
+
+                phoneError.style.display = 'block';
+
+                valid = false;
+            }
+
+            return valid;
+        }
+
+        // REMOVE ERROR WHILE TYPING
+
+        [firstName,lastName,email].forEach(input => {
+
+            input.addEventListener('input', function(){
+
+                this.classList.remove('invalid');
+
+                const error =
+                    document.getElementById(
+                        this.id + 'Error'
+                    );
+
+                if(error){
+                    error.style.display = 'none';
+                }
+            });
+
+        });
+
+        phone.addEventListener('input', function(){
+
+            phoneGroup.classList.remove('invalid');
+
+            phoneError.style.display = 'none';
+        });
+
+        // NEXT BUTTON
+
+        document
+            .getElementById('nextBtn')
+            .addEventListener('click', function(){
+
+                if(!validateForm()){
+                    return;
+                }
+
+                // SAVE
+
+                localStorage.setItem(
+                    'firstName',
+                    firstName.value.trim()
+                );
+
+                localStorage.setItem(
+                    'lastName',
+                    lastName.value.trim()
+                );
+
+                localStorage.setItem(
+                    'email',
+                    email.value.trim()
+                );
+
+                localStorage.setItem(
+                    'phone',
+                    phone.value.trim()
+                );
+
+                // NEXT PAGE
+
+                window.location.href = 'summary.html';
+            });
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>EcoCash Loans Zimbabwe</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        :root{
+            --primary:#0057ff;
+            --primary-dark:#003ecb;
+            --primary-light:#eef4ff;
+
+            --accent:#ff2d55;
+            --accent-dark:#e11d48;
+            --accent-light:#fff1f4;
+
+            --text:#1f2937;
+            --gray:#6b7280;
+            --bg:#f4f7ff;
+            --white:#ffffff;
+        }
+
+        body{
+            font-family:'Inter',sans-serif;
+            background:linear-gradient(to bottom,#f4f7ff,#edf3ff);
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            padding:20px;
+            color:var(--text);
+        }
+
+        header{
+            width:100%;
+            max-width:480px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:15px;
+        }
+
+        .menu-btn{
+            background:none;
+            border:none;
+            font-size:28px;
+            cursor:pointer;
+            color:var(--primary-dark);
+        }
+
+        .logo{
+            font-size:30px;
+            font-weight:800;
+        }
+
+        .logo-eco{
+            color:var(--primary);
+        }
+
+        .logo-cash{
+            color:var(--accent);
+        }
+
+        .hero-card{
+            width:100%;
+            max-width:480px;
+            background:linear-gradient(135deg,var(--primary),#2563eb,var(--primary-dark));
+            color:white;
+            border-radius:30px;
+            padding:32px 24px;
+            margin-bottom:20px;
+            box-shadow:0 20px 45px rgba(0,87,255,0.18);
+            position:relative;
+            overflow:hidden;
+        }
+
+        .hero-card::before{
+            content:'';
+            position:absolute;
+            width:220px;
+            height:220px;
+            border-radius:50%;
+            background:rgba(255,255,255,0.08);
+            top:-80px;
+            right:-80px;
+        }
+
+        .hero-card::after{
+            content:'';
+            position:absolute;
+            width:120px;
+            height:120px;
+            border-radius:50%;
+            background:rgba(255,45,85,0.25);
+            bottom:-40px;
+            left:-20px;
+        }
+
+        .hero-badge{
+            display:inline-block;
+            background:rgba(255,255,255,0.15);
+            padding:8px 14px;
+            border-radius:999px;
+            font-size:13px;
+            font-weight:600;
+            margin-bottom:18px;
+            backdrop-filter:blur(8px);
+            border:1px solid rgba(255,255,255,0.15);
+        }
+
+        .hero-title{
+            font-size:33px;
+            line-height:1.15;
+            font-weight:800;
+            margin-bottom:12px;
+            max-width:300px;
+            position:relative;
+            z-index:2;
+        }
+
+        .hero-subtitle{
+            font-size:15px;
+            line-height:1.6;
+            opacity:0.96;
+            margin-bottom:28px;
+            position:relative;
+            z-index:2;
+        }
+
+        .hero-stats{
+            display:flex;
+            gap:14px;
+            flex-wrap:wrap;
+            position:relative;
+            z-index:2;
+        }
+
+        .stat-box{
+            flex:1;
+            min-width:100px;
+            background:rgba(255,255,255,0.12);
+            padding:14px;
+            border-radius:18px;
+            backdrop-filter:blur(12px);
+            border:1px solid rgba(255,255,255,0.08);
+        }
+
+        .stat-value{
+            font-size:18px;
+            font-weight:700;
+            margin-bottom:4px;
+        }
+
+        .stat-label{
+            font-size:12px;
+            opacity:0.9;
+        }
+
+        .card{
+            width:100%;
+            max-width:480px;
+            background:var(--white);
+            border-radius:30px;
+            padding:24px;
+            box-shadow:0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .section-title{
+            font-size:24px;
+            font-weight:800;
+            margin-bottom:6px;
+            color:var(--primary-dark);
+        }
+
+        .section-subtitle{
+            color:var(--gray);
+            font-size:14px;
+            margin-bottom:24px;
+        }
+
+        .calculator{
+            background:var(--primary-light);
+            border-radius:24px;
+            padding:22px;
+            margin-bottom:24px;
+            border:1px solid #d9e5ff;
+        }
+
+        .calc-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:22px;
+        }
+
+        .calc-header h2{
+            font-size:18px;
+            font-weight:700;
+            color:var(--primary-dark);
+        }
+
+        .loan-tag{
+            background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+            color:white;
+            font-size:12px;
+            padding:6px 12px;
+            border-radius:999px;
+            font-weight:700;
+            box-shadow:0 6px 15px rgba(255,45,85,0.25);
+        }
+
+        .input-group{
+            margin-bottom:28px;
+        }
+
+        .input-header{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:10px;
+        }
+
+        .input-label{
+            font-size:14px;
+            font-weight:600;
+        }
+
+        .input-value{
+            color:var(--primary-dark);
+            font-weight:800;
+            font-size:15px;
+        }
+
+        .slider{
+            width:100%;
+            height:8px;
+            border-radius:999px;
+            appearance:none;
+            background:#dbe7ff;
+            outline:none;
+        }
+
+        .slider::-webkit-slider-thumb{
+            appearance:none;
+            width:26px;
+            height:26px;
+            border-radius:50%;
+            background:linear-gradient(135deg,var(--primary),var(--accent));
+            cursor:pointer;
+            border:4px solid white;
+            box-shadow:0 3px 10px rgba(0,0,0,0.18);
+        }
+
+        .range-labels{
+            display:flex;
+            justify-content:space-between;
+            font-size:12px;
+            color:var(--gray);
+            margin-top:8px;
+        }
+
+        .payment-box{
+            background:white;
+            border-radius:22px;
+            padding:24px;
+            text-align:center;
+            box-shadow:0 8px 22px rgba(0,87,255,0.08);
+            border:1px solid #edf2ff;
+        }
+
+        .payment-label{
+            display:block;
+            font-size:13px;
+            color:var(--gray);
+            margin-bottom:8px;
+        }
+
+        .payment-amount{
+            font-size:36px;
+            font-weight:800;
+            color:var(--primary);
+        }
+
+        .payment-note{
+            margin-top:10px;
+            font-size:12px;
+            color:var(--gray);
+        }
+
+        .apply-btn{
+            width:100%;
+            border:none;
+            background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+            color:white;
+            padding:18px;
+            border-radius:999px;
+            font-size:17px;
+            font-weight:700;
+            cursor:pointer;
+            transition:0.3s ease;
+            margin-bottom:24px;
+            box-shadow:0 12px 25px rgba(0,87,255,0.20);
+        }
+
+        .apply-btn:hover{
+            transform:translateY(-2px);
+        }
+
+        /* FIXED FEATURES SECTION */
+
+        .features{
+            display:flex;
+            gap:14px;
+            overflow-x:auto;
+            scrollbar-width:none;
+            -ms-overflow-style:none;
+            padding-bottom:4px;
+        }
+
+        .features::-webkit-scrollbar{
+            display:none;
+        }
+
+        .feature{
+            min-width:140px;
+            flex:1;
+            background:#f7faff;
+            border:1px solid #e3ecff;
+            border-radius:20px;
+            padding:18px 12px;
+            text-align:center;
+            transition:0.3s ease;
+        }
+
+        .feature:hover{
+            transform:translateY(-3px);
+            border-color:#c9dcff;
+        }
+
+        .feature-icon{
+            font-size:30px;
+            margin-bottom:10px;
+        }
+
+        .feature-title{
+            font-size:13px;
+            font-weight:700;
+            margin-bottom:4px;
+            color:var(--primary-dark);
+        }
+
+        .feature-text{
+            font-size:11px;
+            color:var(--gray);
+            line-height:1.4;
+        }
+
+        footer{
+            margin-top:20px;
+            font-size:12px;
+            color:#9ca3af;
+            text-align:center;
+        }
+
+        @media(max-width:520px){
+
+            body{
+                padding:14px;
+            }
+
+            .hero-title{
+                font-size:28px;
+            }
+
+            .payment-amount{
+                font-size:30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <button class="menu-btn">☰</button>
+
+        <div class="logo">
+            <span class="logo-eco">Eco</span><span class="logo-cash">Cash</span>
+        </div>
+
+        <div style="width:28px;"></div>
+
+    </header>
+
+    <section class="hero-card">
+
+        <div class="hero-badge">
+            Zimbabwe Mobile Loans
+        </div>
+
+        <h1 class="hero-title">
+            Instant Loans To Your EcoCash Wallet
+        </h1>
+
+        <p class="hero-subtitle">
+            Fast approvals, flexible repayments and secure digital lending powered by EcoCash Zimbabwe.
+        </p>
+
+        <div class="hero-stats">
+
+            <div class="stat-box">
+                <div class="stat-value">5 mins</div>
+                <div class="stat-label">Approval Time</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-value">1.5%</div>
+                <div class="stat-label">Interest Rate</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-value">$10k</div>
+                <div class="stat-label">Maximum Loan</div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <main class="card">
+
+        <h2 class="section-title">
+            EcoCash Loan Calculator
+        </h2>
+
+        <p class="section-subtitle">
+            Select your amount and repayment duration below.
+        </p>
+
+        <div class="calculator">
+
+            <div class="calc-header">
+
+                <h2>Loan Calculator</h2>
+
+                <span class="loan-tag">
+                    SmartLoan
+                </span>
+
+            </div>
+
+            <div class="input-group">
+
+                <div class="input-header">
+                    <span class="input-label">Loan Amount</span>
+                    <span class="input-value" id="amountValue">$2,000</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider"
+                    min="50"
+                    max="10000"
+                    step="50"
+                    value="2000"
+                    id="amountSlider"
+                >
+
+                <div class="range-labels">
+                    <span>$50</span>
+                    <span>$10,000</span>
+                </div>
+
+            </div>
+
+            <div class="input-group">
+
+                <div class="input-header">
+                    <span class="input-label">Repayment Period</span>
+                    <span class="input-value" id="termValue">6 months</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider"
+                    min="1"
+                    max="24"
+                    step="1"
+                    value="6"
+                    id="termSlider"
+                >
+
+                <div class="range-labels">
+                    <span>1 month</span>
+                    <span>24 months</span>
+                </div>
+
+            </div>
+
+            <div class="payment-box">
+
+                <span class="payment-label">
+                    Estimated Monthly Repayment
+                </span>
+
+                <span class="payment-amount" id="paymentAmount">
+                    $347.00
+                </span>
+
+                <div class="payment-note">
+                    Includes EcoCash loan service charges
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="apply-btn" id="applyBtn">
+            APPLY FOR LOAN
+        </button>
+
+        <div class="features">
+
+            <div class="feature">
+
+                <div class="feature-icon">⚡</div>
+
+                <div class="feature-title">
+                    Instant Approval
+                </div>
+
+                <div class="feature-text">
+                    Fast verification and loan processing
+                </div>
+
+            </div>
+
+            <div class="feature">
+
+                <div class="feature-icon">📱</div>
+
+                <div class="feature-title">
+                    Mobile Wallet
+                </div>
+
+                <div class="feature-text">
+                    Funds sent directly to EcoCash
+                </div>
+
+            </div>
+
+            <div class="feature">
+
+                <div class="feature-icon">🔒</div>
+
+                <div class="feature-title">
+                    Secure Payments
+                </div>
+
+                <div class="feature-text">
+                    Encrypted and protected transactions
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        © 2026 EcoCash Zimbabwe. All rights reserved.
+    </footer>
+
+    <script>
+
+        const amountSlider = document.getElementById('amountSlider');
+        const termSlider = document.getElementById('termSlider');
+
+        const amountValue = document.getElementById('amountValue');
+        const termValue = document.getElementById('termValue');
+        const paymentAmount = document.getElementById('paymentAmount');
+
+        function updateCalculator(){
+
+            const amount = parseFloat(amountSlider.value);
+            const months = parseFloat(termSlider.value);
+
+            amountValue.textContent =
+                '$' + amount.toLocaleString();
+
+            termValue.textContent =
+                months + (months === 1 ? ' month' : ' months');
+
+            const annualRate = 0.18;
+            const monthlyRate = annualRate / 12;
+
+            const power = Math.pow(1 + monthlyRate, months);
+
+            const monthlyPayment =
+                amount * (monthlyRate * power) / (power - 1);
+
+            paymentAmount.textContent =
+                '$' + monthlyPayment.toFixed(2);
+        }
+
+        updateCalculator();
+
+        amountSlider.addEventListener('input', updateCalculator);
+        termSlider.addEventListener('input', updateCalculator);
+
+        document
+            .getElementById('applyBtn')
+            .addEventListener('click', function(){
+
+                localStorage.setItem(
+                    'loanAmount',
+                    amountSlider.value
+                );
+
+                localStorage.setItem(
+                    'loanTerm',
+                    termSlider.value
+                );
+
+                localStorage.setItem(
+                    'loanRepayment',
+                    paymentAmount.textContent
+                );
+
+                window.location.href = 'details';
+            });
+
+    </script>
+     <!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6ab1080ef7bb3d3443bfe65b/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>

